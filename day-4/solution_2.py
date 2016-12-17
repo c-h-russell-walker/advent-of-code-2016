@@ -8,11 +8,13 @@ from collections import Counter
     - once we reach a tie we sort alphabetically until five chars is reached
 """
 
-# Goal is to get total sum of numeric sector IDs of real room
-result = 0
+room_names = {}
 
 with open(sys.path[0] + '/input.txt') as file:
     file_data = file.readlines()
+
+lower_limit = ord('a')
+upper_limit = ord('z')
 
 for data in file_data:
     answer = []
@@ -30,7 +32,6 @@ for data in file_data:
     sorted_list = [] # running tally of alphabetized sections
     alpha_list = [] # list to alphabetize (items with same count value)
 
-    # TODO - Add comments to clarify
     for ctr_item in most_common:
         if ctr_item[1] != count_val:
             count_val = ctr_item[1]
@@ -48,7 +49,22 @@ for data in file_data:
     answer = answer[:5]
 
     if answer == checksum:
-        result += int(sector_id)
+        new_chars = []
+        pre_sector_chars = re.sub('[^a-zA-Z-]+', '', pre_checksum_chars)
+        for char in pre_sector_chars:
+            if char != '-':
+                val = ord(char.lower())
+                val += (int(sector_id) % 26)
+                if val > upper_limit:
+                    diff = val - upper_limit
+                    val = lower_limit + diff - 1
 
+                new_chars.append(chr(val))
+            else:
+                new_chars.append(' ')
 
-print('Totalled sector IDs is: {}'.format(result))
+        room_names[sector_id] = ''.join(new_chars).rstrip()
+
+for sector_id, name in room_names.items():
+    if 'storage' in name and 'northpole' in name:
+        print('The room `{name}` has the sectorId: {s_id}'.format(name=name, s_id=sector_id))
