@@ -4,6 +4,7 @@ def check_for_palindromes(strings=[]):
             return True
     return False
 
+# TODO - Make these functions more dynamic with params like interior/exterior length
 def check_for_palindrome(word):
     """
         For sake of puzzle we consider consecutive letters not a palindrome
